@@ -6,23 +6,23 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm ci
 
-# Copy source code
+# Copy entire project
 COPY . .
 
-# Create uploads directory for Excel file
+# Make sure uploads exists
 RUN mkdir -p uploads
 
-# Copy the Excel file to the container
-COPY ../VIT_EventHub_Filled.xlsx ./uploads/
+# Copy Excel file (must be inside repo!)
+COPY VIT_EventHub_Filled.xlsx ./uploads/
 
-# Expose port
+# Expose API port
 EXPOSE 5000
 
-# Health check
+# Health Check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:5000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
-# Start the application
+# Start Server
 CMD ["npm", "start"]
