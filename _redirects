@@ -1,0 +1,2 @@
+/api/*  https://vit-event-hub-backend.railway.app/api/:splat  200
+/*    /index.html   404
