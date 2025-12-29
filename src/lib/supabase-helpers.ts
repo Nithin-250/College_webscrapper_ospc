@@ -15,10 +15,13 @@ const getBackendEnvUrl = () => {
 const API_BASE_URL = getBackendEnvUrl().replace(/\/$/, "");
 
 const resolveApiBase = () => {
-  if (API_BASE_URL) {
-    return API_BASE_URL;
+  // Always use the production backend URL when deployed
+  const backendUrl = getBackendEnvUrl();
+  if (backendUrl && backendUrl !== "http://localhost:5000") {
+    return backendUrl;
   }
 
+  // Fallback for local development only
   if (typeof window !== "undefined" && window.location) {
     const { origin, port } = window.location;
 
@@ -31,7 +34,7 @@ const resolveApiBase = () => {
     }
   }
 
-  return "http://localhost:5000";
+  return "https://college-webscrapper-ospc.onrender.com";
 };
 
 const buildApiUrl = (
