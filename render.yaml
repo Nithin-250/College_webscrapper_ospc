@@ -14,7 +14,7 @@ services:
       - key: PORT
         value: 5000
       - key: MONGO_URI
-        sync: false
+        value: ""
       - key: MONGO_DB_NAME
         value: vit_event_hub
       - key: CORS_ORIGIN
