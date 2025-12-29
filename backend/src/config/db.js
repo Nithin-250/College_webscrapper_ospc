@@ -24,7 +24,8 @@ const connectDB = async () => {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("MongoDB connection error:", error.message);
-    process.exit(1);
+    // Don't exit process - continue with local Excel
+    console.log("Continuing with local Excel sheet mode");
   }
 };
 

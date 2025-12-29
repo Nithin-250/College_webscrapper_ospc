@@ -14,8 +14,8 @@ dotenv.config();
 
 const app = express();
 
-// Database
-connectDB();
+// Database (non-blocking)
+connectDB().catch(console.error);
 
 // Security & parsing middleware
 app.use(helmet());

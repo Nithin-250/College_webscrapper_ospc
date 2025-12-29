@@ -6,7 +6,7 @@ services:
     repo: https://github.com/yourusername/event-hub-pro.git
     rootDir: backend
     buildCommand: npm install
-    startCommand: npm start
+    startCommand: node server.js
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
@@ -14,7 +14,7 @@ services:
       - key: PORT
         value: 5000
       - key: MONGO_URI
-        sync: false
+        value: ""
       - key: MONGO_DB_NAME
         value: vit_event_hub
       - key: CORS_ORIGIN
