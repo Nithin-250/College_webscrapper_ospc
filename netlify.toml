@@ -7,7 +7,7 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "https://vit-event-hub-backend.railway.app/api/:splat"
+  to = "https://college-webscrapper-ospc.onrender.com/api/:splat"
   status = 200
 
 [[redirects]]
