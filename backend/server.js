@@ -50,6 +50,21 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+app.get("/api/debug", async (_req, res) => {
+  const fs = await import('fs');
+  const path = await import('path');
+  
+  const excelPath = path.resolve(process.cwd(), 'VIT_EventHub_Filled.xlsx');
+  const exists = fs.existsSync(excelPath);
+  
+  res.json({ 
+    excelPath,
+    exists,
+    cwd: process.cwd(),
+    files: fs.readdirSync(process.cwd())
+  });
+});
+
 // Error handling
 app.use(notFoundHandler);
 app.use(errorHandler);

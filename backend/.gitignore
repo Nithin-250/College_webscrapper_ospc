@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 node_modules
 .env
 *.log
 .DS_Store
 dist
+=======
+node_modules
+.env
+*.log
+.DS_Store
+dist
+>>>>>>> 7bf3cb6e096150996d5ee90d35fba146b4833e78

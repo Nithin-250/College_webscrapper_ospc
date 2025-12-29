@@ -6,8 +6,9 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm ci
 
+<<<<<<< HEAD
 # Install Caddy server
 RUN apk update && \
     apk add --no-cache curl tar gzip ca-certificates && \
@@ -25,11 +26,18 @@ COPY ../package*.json .././
 RUN cd .. && npm ci && npm run build
 
 # Create uploads directory for Excel file
+=======
+# Copy entire project
+COPY . .
+
+# Make sure uploads exists
+>>>>>>> 7bf3cb6e096150996d5ee90d35fba146b4833e78
 RUN mkdir -p uploads
 
-# Copy the Excel file to the container
-COPY ../VIT_EventHub_Filled.xlsx ./uploads/
+# Copy Excel file (must be inside repo!)
+COPY VIT_EventHub_Filled.xlsx ./uploads/
 
+<<<<<<< HEAD
 # Copy built frontend
 COPY ../dist ./dist/
 
@@ -38,10 +46,19 @@ COPY Caddyfile /etc/caddy/Caddyfile
 
 # Expose port
 EXPOSE 80
+=======
+# Expose API port
+EXPOSE 5000
+>>>>>>> 7bf3cb6e096150996d5ee90d35fba146b4833e78
 
-# Health check
+# Health Check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:5000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
+<<<<<<< HEAD
 # Start both backend and Caddy
 CMD ["sh", "-c", "npm start & caddy run --config /etc/caddy/Caddyfile"]
+=======
+# Start Server
+CMD ["npm", "start"]
+>>>>>>> 7bf3cb6e096150996d5ee90d35fba146b4833e78

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 services:
   # Backend Service
   - type: web
@@ -31,3 +32,38 @@ services:
     envVars:
       - key: VITE_BACKEND_URL
         value: https://event-hub-backend.onrender.com
+=======
+services:
+  # Backend Service
+  - type: web
+    name: event-hub-backend
+    env: node
+    repo: https://github.com/yourusername/event-hub-pro.git
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        value: ""
+      - key: MONGO_DB_NAME
+        value: vit_event_hub
+      - key: CORS_ORIGIN
+        value: https://your-frontend-domain.onrender.com
+
+  # Frontend Service (Optional - if you want to deploy frontend too)
+  - type: web
+    name: event-hub-frontend
+    env: static
+    repo: https://github.com/yourusername/event-hub-pro.git
+    rootDir: .
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_BACKEND_URL
+        value: https://event-hub-backend.onrender.com
+>>>>>>> 7bf3cb6e096150996d5ee90d35fba146b4833e78
