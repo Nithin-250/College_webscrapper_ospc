@@ -1,0 +1,17 @@
+{
+    admin off
+    auto_https off
+}
+
+:80 {
+    # Serve frontend static files
+    handle /api/* {
+        reverse_proxy localhost:5000
+    }
+    
+    # Serve frontend from dist folder
+    handle /* {
+        root * /app/dist
+        try_files {path} {path}/ /index.html
+    }
+}
