@@ -72,6 +72,7 @@ export function Header() {
             </Link>
           ))}
           <div className="hidden xl:flex items-center gap-2 border-l border-[hsl(228_36%_22%/0.6)] pl-6 text-xs uppercase tracking-[0.35em] text-muted-foreground/70">
+            <img src="/ospc-logo.png" alt="OSPC Logo" className="h-5 w-5" />
             <Sparkles className="h-3.5 w-3.5 text-accent" />
             Open Source Programming Club
           </div>
