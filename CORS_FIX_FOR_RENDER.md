@@ -10,7 +10,7 @@ const cors = require('cors');
 // Add this middleware to your app
 app.use(cors({
   origin: [
-    'https://fascinating-tiramisu-4c70e0.netlify.app',
+    'https://college-webscrapper-ospc.netlify.app',
     'http://localhost:5173',
     'http://localhost:3000'
   ],

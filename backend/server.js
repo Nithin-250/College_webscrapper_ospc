@@ -22,7 +22,7 @@ app.use(helmet());
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN?.split(",") ?? [
-      "https://fascinating-tiramisu-4c70e0.netlify.app",
+      "https://college-webscrapper-ospc.netlify.app",
       "http://localhost:5173",
       "http://localhost:3000"
     ],
