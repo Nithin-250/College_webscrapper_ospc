@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Generation Test</title>
+</head>
+<body>
+    <h1>URL Generation Test</h1>
+    <div id="result"></div>
+    
+    <script>
+        // Simulate the exact same logic as the app
+        const getBackendEnvUrl = () => {
+            return "https://college-webscrapper-ospc.onrender.com";
+        };
+
+        const resolveApiBase = () => {
+            // Check if we're running on Netlify (or similar production environment)
+            if (typeof window !== "undefined" && window.location) {
+                const { hostname } = window.location;
+                
+                // Use relative URLs for Netlify to trigger redirects
+                if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+                    return ""; // Return empty string for relative URLs
+                }
+            }
+
+            // For local development, use the configured backend URL
+            const backendUrl = getBackendEnvUrl();
+            if (backendUrl && backendUrl !== "http://localhost:5000") {
+                return backendUrl;
+            }
+
+            return "https://college-webscrapper-ospc.onrender.com";
+        };
+
+        const buildApiUrl = (path, params) => {
+            const apiBase = resolveApiBase();
+            
+            // For Netlify (relative URLs), construct the URL manually
+            if (!apiBase) {
+                let url = path;
+                if (params) {
+                    const searchParams = new URLSearchParams();
+                    Object.entries(params)
+                        .filter(([, value]) => value !== undefined && value !== null && value !== "")
+                        .forEach(([key, value]) => searchParams.set(key, String(value)));
+                    const queryString = searchParams.toString();
+                    if (queryString) {
+                        url += (path.includes('?') ? '&' : '?') + queryString;
+                    }
+                }
+                return url;
+            }
+            
+            // For direct API calls (local development), use URL constructor
+            const url = new URL(path, apiBase);
+
+            if (params) {
+                Object.entries(params)
+                    .filter(([, value]) => value !== undefined && value !== null && value !== "")
+                    .forEach(([key, value]) => url.searchParams.set(key, String(value)));
+            }
+
+            return url.toString();
+        };
+
+        // Test the URL generation
+        const testUrlGeneration = () => {
+            const hostname = window.location.hostname;
+            const apiBase = resolveApiBase();
+            const apiUrl = buildApiUrl("/api/events", { status: "approved" });
+            
+            document.getElementById('result').innerHTML = `
+                <p><strong>Current hostname:</strong> ${hostname}</p>
+                <p><strong>API Base resolved to:</strong> "${apiBase}"</p>
+                <p><strong>Final API URL:</strong> ${apiUrl}</p>
+                <p><strong>Should be relative:</strong> ${hostname !== 'localhost' && hostname !== '127.0.0.1' ? 'Yes' : 'No'}</p>
+            `;
+        };
+
+        testUrlGeneration();
+    </script>
+</body>
+</html>

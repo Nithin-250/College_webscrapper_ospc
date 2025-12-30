@@ -7,10 +7,15 @@
 
 [[redirects]]
   from = "/api/*"
-  to = "https://college-webscrapper-ospc.onrender.com/api/:splat"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/test"
+  to = "/.netlify/functions/test-function"
   status = 200
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
-  status = 404
+  status = 200

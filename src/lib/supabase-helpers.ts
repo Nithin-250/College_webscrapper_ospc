@@ -15,25 +15,7 @@ const getBackendEnvUrl = () => {
 const API_BASE_URL = getBackendEnvUrl().replace(/\/$/, "");
 
 const resolveApiBase = () => {
-  // Always use the production backend URL when deployed
-  const backendUrl = getBackendEnvUrl();
-  if (backendUrl && backendUrl !== "http://localhost:5000") {
-    return backendUrl;
-  }
-
-  // Fallback for local development only
-  if (typeof window !== "undefined" && window.location) {
-    const { origin, port } = window.location;
-
-    if (port && ["5173", "3000", "4173", "8080", "8081"].includes(port)) {
-      return "http://localhost:5000";
-    }
-
-    if (origin) {
-      return origin;
-    }
-  }
-
+  // Always use the Render backend directly
   return "https://college-webscrapper-ospc.onrender.com";
 };
 
@@ -41,7 +23,10 @@ const buildApiUrl = (
   path: string,
   params?: Record<string, string | number | undefined>
 ) => {
-  const url = new URL(path, resolveApiBase());
+  const apiBase = resolveApiBase();
+  
+  // Use URL constructor for direct API calls
+  const url = new URL(path, apiBase);
 
   if (params) {
     Object.entries(params)
@@ -172,15 +157,39 @@ const parseJsonResponse = async <T>(response: Response): Promise<T> => {
 
 // Fetch approved events for public view
 export async function fetchApprovedEvents(): Promise<Event[]> {
-  const response = await fetch(buildApiUrl("/api/events", { status: "approved" }));
-  const data = await parseJsonResponse<unknown>(response);
+  const apiUrl = buildApiUrl("/api/events", { status: "approved" });
+  console.log("=== API DEBUG ===");
+  console.log("Fetching events from:", apiUrl);
+  console.log("Current hostname:", typeof window !== "undefined" ? window.location.hostname : "server");
+  console.log("Resolved API base:", resolveApiBase());
+  console.log("Is relative URL:", !apiUrl.startsWith("http"));
+  console.log("================");
+  
+  try {
+    const response = await fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+    });
+    
+    console.log("Response status:", response.status);
+    console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+    
+    const data = await parseJsonResponse<unknown>(response);
+    console.log("Events data received:", Array.isArray(data) ? data.length : "not an array");
 
-  if (!Array.isArray(data)) {
-    console.warn("Unexpected events payload", data);
+    if (!Array.isArray(data)) {
+      console.warn("Unexpected events payload", data);
+      return [];
+    }
+
+    return data.map((record) => normalizeEventRecord(record as RawEventRecord));
+  } catch (error) {
+    console.error("Error fetching events:", error);
     return [];
   }
-
-  return data.map((record) => normalizeEventRecord(record as RawEventRecord));
 }
 
 // Fetch single event by ID

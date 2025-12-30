@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Test</h1>
+    <div id="result"></div>
+    
+    <script>
+        // Test the same API call logic as the app
+        const getBackendEnvUrl = () => {
+            try {
+                // Simulate the environment variable
+                return "https://college-webscrapper-ospc.onrender.com";
+            } catch (error) {
+                console.warn("Unable to read VITE_BACKEND_URL", error);
+                return "";
+            }
+        };
+
+        const resolveApiBase = () => {
+            // Check if we're running on Netlify (or similar production environment)
+            if (typeof window !== "undefined" && window.location) {
+                const { hostname, origin } = window.location;
+                
+                // Use relative URLs for Netlify to trigger redirects
+                if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+                    return origin; // This will make API calls relative to the domain
+                }
+            }
+
+            // For local development, use the configured backend URL
+            const backendUrl = getBackendEnvUrl();
+            if (backendUrl && backendUrl !== "http://localhost:5000") {
+                return backendUrl;
+            }
+
+            return "https://college-webscrapper-ospc.onrender.com";
+        };
+
+        const buildApiUrl = (path, params) => {
+            const url = new URL(path, resolveApiBase());
+            
+            if (params) {
+                Object.entries(params)
+                    .filter(([, value]) => value !== undefined && value !== null && value !== "")
+                    .forEach(([key, value]) => url.searchParams.set(key, String(value)));
+            }
+            
+            return url.toString();
+        };
+
+        // Test the API call
+        const testApi = async () => {
+            const apiUrl = buildApiUrl("/api/events", { status: "approved" });
+            console.log("Fetching events from:", apiUrl);
+            
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                    },
+                });
+                
+                console.log("Response status:", response.status);
+                console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+                
+                const data = await response.json();
+                console.log("Events data received:", Array.isArray(data) ? data.length : "not an array");
+                
+                document.getElementById('result').innerHTML = `
+                    <p>API URL: ${apiUrl}</p>
+                    <p>Status: ${response.status}</p>
+                    <p>Events Count: ${Array.isArray(data) ? data.length : 0}</p>
+                    <p>First Event: ${Array.isArray(data) && data.length > 0 ? data[0].name : 'N/A'}</p>
+                `;
+            } catch (error) {
+                console.error("Error fetching events:", error);
+                document.getElementById('result').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        };
+
+        testApi();
+    </script>
+</body>
+</html>

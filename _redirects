@@ -1,2 +1,4 @@
-/api/*  https://vit-event-hub-backend.railway.app/api/:splat  200
-/*    /index.html   404
+/api/events                                    https://college-webscrapper-ospc.onrender.com/api/events                                      200
+/api/events/*                                  https://college-webscrapper-ospc.onrender.com/api/events/:splat                              200
+/api/*                                         https://college-webscrapper-ospc.onrender.com/api/:splat                                         200
+/*                                             /index.html                                                                           200

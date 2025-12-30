@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirect Test</title>
+</head>
+<body>
+    <h1>Netlify Redirect Test</h1>
+    <div id="result"></div>
+    
+    <script>
+        // Test the redirect directly
+        fetch('/api/events?status=approved')
+            .then(response => {
+                console.log('Response status:', response.status);
+                console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+                return response.text();
+            })
+            .then(text => {
+                console.log('Response body:', text.substring(0, 200));
+                document.getElementById('result').innerHTML = `
+                    <p><strong>Status:</strong> ${response.status}</p>
+                    <p><strong>Response preview:</strong> ${text.substring(0, 200)}...</p>
+                `;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = `<p>Error: ${error.message}</p>`;
+            });
+    </script>
+</body>
+</html>

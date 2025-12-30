@@ -21,7 +21,11 @@ connectDB().catch(console.error);
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN?.split(",") ?? "*",
+    origin: process.env.CORS_ORIGIN?.split(",") ?? [
+      "https://fascinating-tiramisu-4c70e0.netlify.app",
+      "http://localhost:5173",
+      "http://localhost:3000"
+    ],
     credentials: true,
   })
 );
